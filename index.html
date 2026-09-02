@@ -20,6 +20,7 @@
        outbound_click        { url, label }
        section_view          { section }
        contact_form_submit   { }
+       resume_download        { cta_id }   ("hero_resume" or "resume_band")
      ======================================================= -->
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -924,12 +925,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 (function(){
 
   /* ---------- generic click tracking ---------- */
+  var RESUME_CTAS = ['hero_resume', 'resume_band'];
   document.addEventListener('click', function(e){
     var el = e.target.closest('[data-track]');
     if(!el) return;
     var event = el.getAttribute('data-track');
     if(event === 'cta_click'){
-      gtmTrack('cta_click', { cta_id: el.getAttribute('data-cta') });
+      var ctaId = el.getAttribute('data-cta');
+      gtmTrack('cta_click', { cta_id: ctaId });
+      // Also fire a dedicated, plainly-named event for resume downloads so
+      // it shows up on its own in GA4's Events report — no custom
+      // dimension needed to dig cta_id out of the generic cta_click event.
+      if(RESUME_CTAS.indexOf(ctaId) !== -1){
+        gtmTrack('resume_download', { cta_id: ctaId });
+      }
     } else if(event === 'outbound_click'){
       gtmTrack('outbound_click', { url: el.href, label: el.getAttribute('data-label') });
     }
