@@ -33,90 +33,73 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
   :root{
-    --ink:#18161C;
-    --panel:#221F27;
-    --panel-hi:#2C2832;
-    --rule:#3A3540;
-    --rule-soft:#2C2732;
-    --fg:#F3F1EA;
-    --muted:#9F9CA6;
-    --faint:#6E6A76;
-    --verify:#C1584A;
-    --verify-dim:#7A3830;
-    --gold:#C9A24B;
-    --gold-dim:#75612F;
+    --ink:#130F17;
+    --ink2:#1E1823;
+    --ink3:#2B232F;
+    --line:#372D3E;
+    --fg:#F8F4EF;
+    --muted:#B7ACB4;
+    --faint:#847A85;
+    --flame:#FF5B3D;
+    --flame-dim:#7A2C1C;
+    --amber:#FFB84D;
+    --amber-dim:#7A5A1E;
     --maxw:1180px;
-
-    /* paper: for individual cards (the ledger card, a certificate, the
-       résumé), never for whole sections — the canvas stays dark
-       throughout and paper appears as a recurring, contained material
-       on it, not a change of wall colour. */
-    --paper:#F8F5EC;
-    --paper-panel:#EFE9D8;
-    --paper-rule:#DCD3B9;
-    --paper-ink:#19161F;
-    --paper-muted:#615A4D;
-    --paper-faint:#8A8271;
-    --paper-gold:#8A6420;
-  }
-
-  .paper-card{
-    --ink:var(--paper);
-    --panel:var(--paper-panel);
-    --panel-hi:var(--paper-panel);
-    --rule:var(--paper-rule);
-    --rule-soft:var(--paper-rule);
-    --fg:var(--paper-ink);
-    --muted:var(--paper-muted);
-    --faint:var(--paper-faint);
-    --gold:var(--paper-gold);
-    background-color:var(--ink);
-    color:var(--fg);
-    box-shadow:0 22px 44px -26px rgba(0,0,0,0.6);
+    --r-lg:26px;
+    --r-md:18px;
+    --r-sm:12px;
+    --r-pill:999px;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth;}
   body{
-    background-color:var(--ink);
-    background-image: radial-gradient(circle, rgba(243,241,234,0.055) 1px, transparent 1px);
-    background-size: 26px 26px;
+    background:var(--ink);
     color:var(--fg);
-    font-family:'Inter',-apple-system,sans-serif;
+    font-family:'Hanken Grotesk',-apple-system,sans-serif;
     line-height:1.6;
     -webkit-font-smoothing:antialiased;
     overflow-x:hidden;
+    position:relative;
   }
-  ::selection{ background:var(--verify); color:#160806; }
+  ::selection{ background:var(--flame); color:#160806; }
   a{ color:inherit; text-decoration:none; }
   img{ max-width:100%; display:block; }
   button{ font-family:inherit; cursor:pointer; background:none; border:none; color:inherit; }
   ul{ list-style:none; }
 
-  h1,h2,h3,h4,.serif{
-    font-family:'Fraunces', Georgia, serif;
-    font-weight:600;
-    letter-spacing:-0.01em;
-    line-height:1.08;
+  h1,h2,h3,h4,.display{
+    font-family:'Bricolage Grotesque', 'Hanken Grotesk', sans-serif;
+    font-weight:700;
+    letter-spacing:-0.02em;
+    line-height:1.02;
   }
-  .mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
 
-  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 32px; }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 32px; position:relative; z-index:1; }
   @media (max-width:640px){ .wrap{ padding:0 20px; } }
 
-  .eyebrow{
-    font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:0.14em;
-    color:var(--muted); text-transform:uppercase;
-    display:flex; align-items:center; gap:10px;
+  /* ---------- custom cursor ---------- */
+  .cursor-ring{
+    position:fixed; top:0; left:0; width:30px; height:30px; margin:-15px 0 0 -15px;
+    border:1.5px solid var(--flame); border-radius:50%; pointer-events:none; z-index:9999;
+    opacity:0; will-change:transform;
+    transition:opacity .25s ease, width .25s ease, height .25s ease, margin .25s ease, background .25s ease;
   }
-  .eyebrow .dot{ width:6px; height:6px; border-radius:50%; background:var(--verify); flex-shrink:0; }
+  html.cursor-on .cursor-ring{ opacity:1; }
+  html.cursor-on{ cursor:none; }
+  html.cursor-on a, html.cursor-on button{ cursor:none; }
+  .cursor-ring.hover{ width:56px; height:56px; margin:-28px 0 0 -28px; background:rgba(255,91,61,0.16); }
+
+  /* ---------- scroll progress ---------- */
+  .progress-track{ position:fixed; top:0; left:0; width:100%; height:3px; background:rgba(255,255,255,0.05); z-index:70; }
+  .progress-fill{ height:100%; width:100%; background:linear-gradient(90deg,var(--flame),var(--amber)); transform:scaleX(0); transform-origin:left center; box-shadow:0 0 14px rgba(255,91,61,0.55); }
 
   /* ---------- reveal-on-scroll: visible by default, JS opts in ---------- */
   .reveal{ opacity:1; transform:none; }
-  html.js-motion .reveal{ opacity:0; transform:translateY(22px); }
+  html.js-motion .reveal{ opacity:0; transform:translateY(26px); }
   @media (prefers-reduced-motion:reduce){
     html.js-motion .reveal{ opacity:1; transform:none; }
     html{ scroll-behavior:auto; }
@@ -124,120 +107,141 @@
 
   /* ---------- buttons ---------- */
   .btn{
-    display:inline-flex; align-items:center; gap:8px;
-    font-family:'IBM Plex Mono', monospace; font-size:12.5px; letter-spacing:0.04em;
-    text-transform:uppercase; padding:13px 22px;
-    border:1px solid var(--verify); color:var(--verify);
-    transition:background .25s ease, color .25s ease, border-color .25s ease;
+    display:inline-flex; align-items:center; gap:9px;
+    font-family:'Hanken Grotesk',sans-serif; font-size:15px; font-weight:600;
+    padding:15px 26px; border-radius:var(--r-pill);
+    border:1.5px solid var(--flame); color:var(--fg);
+    transition:transform .25s ease, background .25s ease, border-color .25s ease;
     white-space:nowrap; position:relative;
   }
-  .btn:hover{ background:var(--verify); color:#160806; }
-  .btn.solid{ background:var(--verify); color:#160806; }
-  .btn.solid:hover{ background:#d76c5c; border-color:#d76c5c; }
-  .btn.ghost{ border-color:var(--rule); color:var(--fg); }
-  .btn.ghost:hover{ background:var(--panel-hi); border-color:var(--rule); color:var(--fg); }
+  .btn.solid{ background:linear-gradient(135deg,var(--flame),#ff7a52); border-color:transparent; color:#1a0904; box-shadow:0 14px 30px -14px rgba(255,91,61,0.65); }
+  .btn.solid:hover{ transform:translateY(-2px); box-shadow:0 18px 36px -14px rgba(255,91,61,0.8); }
+  .btn.ghost{ border-color:var(--line); }
+  .btn.ghost:hover{ border-color:var(--flame); background:rgba(255,91,61,0.08); }
   .btn:focus-visible, a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{
-    outline:2px solid var(--verify); outline-offset:3px;
+    outline:2px solid var(--flame); outline-offset:3px;
   }
 
   /* ---------- nav ---------- */
   header{
     position:sticky; top:0; z-index:50;
-    background:rgba(12,13,16,0.88);
-    backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--rule);
+    background:rgba(19,15,23,0.78);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
   }
-  nav{ display:flex; align-items:center; justify-content:space-between; padding:20px 0; gap:16px; }
-  .logo{ font-family:'Fraunces',serif; font-weight:700; font-size:17px; display:flex; align-items:center; gap:9px; letter-spacing:0.01em; }
-  .logo .sq{ width:9px; height:9px; background:var(--verify); flex-shrink:0; }
+  nav{ display:flex; align-items:center; justify-content:space-between; padding:18px 0; gap:16px; }
+  .logo{ font-family:'Bricolage Grotesque',sans-serif; font-weight:700; font-size:18px; display:flex; align-items:center; gap:9px; }
+  .logo .dot{ width:9px; height:9px; border-radius:50%; background:var(--flame); flex-shrink:0; box-shadow:0 0 10px rgba(255,91,61,0.8); }
   .navlinks{ display:flex; align-items:center; gap:30px; }
-  .navlinks a{
-    font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:0.06em;
-    color:var(--muted); text-transform:uppercase; transition:color .2s;
-  }
+  .navlinks a{ font-size:14px; font-weight:500; color:var(--muted); transition:color .2s; }
   .navlinks a:hover{ color:var(--fg); }
   .navmobile{ display:none; }
-  @media (max-width:900px){ .navlinks{ display:none; } .navmobile{ display:inline-flex; } }
-
-  /* ---------- stamp signature ---------- */
-  .stamp{ color:var(--verify); flex-shrink:0; }
-  .stamp svg{ display:block; width:100%; height:100%; }
+  @media (max-width:900px){ .navlinks{ display:none; } .navmobile{ display:inline-flex; padding:11px 18px; font-size:13px; } }
 
   /* ---------- section rhythm ---------- */
-  section{ padding:84px 0; border-top:1px solid var(--rule); }
-  section:first-of-type{ border-top:none; }
-  .sec-head{ display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:48px; flex-wrap:wrap; gap:16px; }
-  .sec-head h2{ font-size:clamp(30px,4vw,42px); }
-  .sec-head .sec-note{ font-size:13.5px; color:var(--faint); max-width:300px; text-align:right; line-height:1.65; }
+  section{ padding:100px 0; position:relative; }
+  .sec-head{ display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:52px; flex-wrap:wrap; gap:16px; }
+  .sec-head h2{ font-size:clamp(32px,4.4vw,48px); }
+  .sec-head .sec-note{ font-size:14px; color:var(--faint); max-width:300px; text-align:right; line-height:1.65; }
   @media (max-width:640px){ .sec-head .sec-note{ text-align:left; } }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:9px; font-size:13px; font-weight:600;
+    letter-spacing:0.02em; color:var(--muted); text-transform:uppercase;
+    padding:8px 16px; border:1px solid var(--line); border-radius:var(--r-pill); margin-bottom:22px;
+  }
+  .eyebrow .dot{ width:6px; height:6px; border-radius:50%; background:var(--flame); flex-shrink:0; }
 
   /* ---------- hero ---------- */
-  .hero{ padding:76px 0 68px; border-top:none; }
-  .hero-grid{ display:grid; grid-template-columns:1.15fr 0.85fr; gap:60px; align-items:start; }
+  .hero{ padding:64px 0 80px; overflow:hidden; }
+  .blob{ position:absolute; border-radius:50%; filter:blur(95px); pointer-events:none; z-index:0; }
+  .blob-a{ width:560px; height:560px; background:var(--flame); opacity:0.38; top:-160px; right:-120px; }
+  .blob-b{ width:440px; height:440px; background:var(--amber); opacity:0.24; bottom:-160px; left:-100px; }
+  .hero-grid{ display:grid; grid-template-columns:1.15fr 0.85fr; gap:60px; align-items:center; }
   @media (max-width:940px){ .hero-grid{ grid-template-columns:1fr; } }
-  h1.headline{ font-size:clamp(40px,6vw,66px); margin-top:22px; }
-  .hero p.sub{ margin-top:24px; max-width:500px; font-size:17.5px; color:var(--muted); }
-  .hero-cta{ display:flex; gap:14px; margin-top:36px; flex-wrap:wrap; }
+  h1.headline{ font-size:clamp(42px,6.6vw,74px); }
+  h1.headline .word{ display:inline-block; }
+  h1.headline .accent{ color:var(--flame); }
+  .hero p.sub{ margin-top:26px; max-width:500px; font-size:18px; color:var(--muted); }
+  .hero-cta{ display:flex; gap:14px; margin-top:38px; flex-wrap:wrap; }
 
-  .ledger-card{ background:var(--panel); border:1px solid var(--rule); padding:30px; position:relative; }
-  .ledger-card .stamp{ position:absolute; top:-18px; right:-14px; width:78px; height:78px; }
-  .ledger-head{ display:flex; align-items:center; gap:16px; margin-bottom:22px; padding-bottom:22px; border-bottom:1px solid var(--rule); }
-  .monogram{ width:52px; height:52px; border-radius:50%; object-fit:cover; flex-shrink:0; border:1px solid var(--rule); }
-  .ledger-head .name{ font-weight:600; font-size:15.5px; }
-  .ledger-head .role{ font-size:12.5px; color:var(--faint); margin-top:3px; }
-  .stat-row{ display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding:15px 0; border-bottom:1px solid var(--rule-soft); }
-  .stat-row:last-child{ border-bottom:none; padding-bottom:0; }
-  .stat-row:first-child{ padding-top:0; }
-  .stat-row .label{ font-size:13px; color:var(--muted); max-width:220px; }
-  .stat-row .value{ font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:16.5px; white-space:nowrap; }
-  .v-verify{ color:var(--verify); }
-  .v-gold{ color:var(--gold); }
+  .hero-card{
+    background:var(--ink2); border:1px solid var(--line); border-radius:var(--r-lg);
+    padding:32px; position:relative; box-shadow:0 40px 80px -40px rgba(0,0,0,0.7);
+  }
+  .hero-card-head{ display:flex; align-items:center; gap:16px; margin-bottom:26px; }
+  .avatar{ width:60px; height:60px; border-radius:50%; object-fit:cover; flex-shrink:0; border:2px solid var(--ink3); }
+  .hero-card-head .name{ font-family:'Bricolage Grotesque',sans-serif; font-weight:700; font-size:17px; }
+  .hero-card-head .role{ font-size:13px; color:var(--faint); margin-top:3px; }
+  .mini-chart{ padding:20px; background:var(--ink3); border-radius:var(--r-md); margin-bottom:18px; }
+  .mini-chart-head{ display:flex; justify-content:space-between; align-items:center; font-size:11.5px; font-weight:600; letter-spacing:0.03em; text-transform:uppercase; color:var(--faint); margin-bottom:14px; }
+  .mini-chart-head .tag{ color:var(--flame); }
+  .chart-svg{ width:100%; height:50px; display:block; overflow:visible; }
+  .chart-line{ fill:none; stroke:var(--flame); stroke-width:2.5; stroke-linecap:round; }
+  .chart-dot{ fill:var(--flame); filter:drop-shadow(0 0 6px rgba(255,91,61,0.8)); }
+  .mini-chart-foot{ display:flex; align-items:baseline; gap:10px; margin-top:14px; }
+  .mini-chart-foot .num{ font-family:'Bricolage Grotesque',sans-serif; font-size:22px; font-weight:700; }
+  .mini-chart-foot .arrow{ color:var(--faint); font-size:15px; }
+  .mini-chart-foot .lbl{ font-size:12.5px; color:var(--muted); margin-left:2px; }
+  .hero-stats{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .hero-stat{ background:var(--ink3); border-radius:var(--r-md); padding:16px 18px; }
+  .hero-stat .num{ font-family:'Bricolage Grotesque',sans-serif; font-weight:700; font-size:21px; }
+  .hero-stat .lbl{ font-size:11.5px; color:var(--faint); margin-top:5px; line-height:1.4; }
 
   /* ---------- proof strip ---------- */
-  .proof-strip{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--rule); border:1px solid var(--rule); }
-  @media (max-width:760px){ .proof-strip{ grid-template-columns:1fr 1fr; } }
-  .proof-cell{ background:var(--ink); padding:30px 26px; }
-  .proof-cell .num{ font-family:'IBM Plex Mono',monospace; font-size:32px; font-weight:600; }
-  .proof-cell .lbl{ font-size:13px; color:var(--muted); margin-top:10px; max-width:200px; }
+  .proof-strip{ display:flex; flex-wrap:wrap; gap:44px 56px; }
+  .proof-cell .num{ font-family:'Bricolage Grotesque',sans-serif; font-size:46px; font-weight:700; position:relative; display:inline-block; }
+  .proof-cell .num::after{ content:""; position:absolute; left:0; bottom:2px; width:100%; height:9px; background:currentColor; opacity:0.16; z-index:-1; border-radius:4px; }
+  .proof-cell .lbl{ font-size:14px; color:var(--muted); margin-top:10px; max-width:210px; }
 
-  /* ---------- exhibits (case studies) ---------- */
-  .exhibit{ padding:52px 0; border-top:1px solid var(--rule); }
-  .exhibit:first-of-type{ border-top:none; padding-top:0; }
-  .exhibit-tag{ display:inline-flex; align-items:center; gap:8px; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; padding:6px 11px; border:1px solid var(--rule); margin-bottom:16px; }
-  .exhibit-tag .dot{ width:6px; height:6px; border-radius:50%; }
-  .exhibit-tag.seo{ color:var(--verify); border-color:var(--verify-dim); }
-  .exhibit-tag.seo .dot{ background:var(--verify); }
-  .exhibit-tag.paid{ color:var(--gold); border-color:var(--gold-dim); }
-  .exhibit-tag.paid .dot{ background:var(--gold); }
-  .exhibit h3{ font-size:clamp(23px,3vw,30px); margin-bottom:20px; max-width:640px; }
-  .snapshot{ display:flex; gap:32px; flex-wrap:wrap; padding:16px 0; border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); margin-bottom:30px; }
-  .snapshot div{ font-size:13.5px; max-width:260px; }
-  .snapshot .k{ font-family:'IBM Plex Mono',monospace; color:var(--faint); font-size:10.5px; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:5px; }
-  .exhibit-body{ display:grid; grid-template-columns:1fr 1fr; gap:44px; }
-  @media (max-width:860px){ .exhibit-body{ grid-template-columns:1fr; } }
-  .exhibit-body h4{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--faint); margin-bottom:13px; }
-  .exhibit-body h4.spaced{ margin-top:24px; }
-  .exhibit-body p{ color:var(--muted); font-size:15px; line-height:1.7; }
-  .exhibit-body li{ color:var(--muted); font-size:14.5px; line-height:1.6; padding-left:16px; position:relative; margin-bottom:10px; }
-  .exhibit-body li::before{ content:"–"; position:absolute; left:0; color:var(--faint); }
+  /* ---------- ticker ---------- */
+  .ticker-wrap{ overflow:hidden; padding:26px 0; background:linear-gradient(90deg, rgba(255,91,61,0.08), rgba(255,184,77,0.08)); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .ticker-track{ display:flex; width:max-content; }
+  .ticker-track span{ font-family:'Bricolage Grotesque',sans-serif; font-size:22px; font-weight:700; color:var(--muted); white-space:nowrap; padding:0 26px; display:inline-flex; align-items:center; gap:26px; }
+  .ticker-track span:nth-child(3n+1){ color:var(--flame); }
+  .ticker-track span:nth-child(3n+2){ color:var(--amber); }
+  .ticker-track span::after{ content:"✦"; font-size:13px; color:var(--line); }
 
-  .results-table{ margin-top:2px; }
-  .results-table .stat-row .value{ font-size:17px; }
+  /* ---------- case studies ---------- */
+  .case{ background:var(--ink2); border:1px solid var(--line); border-radius:var(--r-lg); padding:44px; margin-bottom:28px; }
+  .case:last-child{ margin-bottom:0; }
+  @media (max-width:640px){ .case{ padding:28px 22px; } }
+  .case-tag{ display:inline-flex; align-items:center; gap:8px; font-size:12.5px; font-weight:600; letter-spacing:0.03em; text-transform:uppercase; padding:7px 14px; border-radius:var(--r-pill); margin-bottom:18px; }
+  .case-tag .dot{ width:6px; height:6px; border-radius:50%; }
+  .case-tag.seo{ color:var(--flame); background:rgba(255,91,61,0.12); }
+  .case-tag.seo .dot{ background:var(--flame); }
+  .case-tag.paid{ color:var(--amber); background:rgba(255,184,77,0.12); }
+  .case-tag.paid .dot{ background:var(--amber); }
+  .case h3{ font-size:clamp(24px,3vw,32px); margin-bottom:22px; max-width:680px; }
+  .snapshot{ display:flex; gap:32px; flex-wrap:wrap; padding:18px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); margin-bottom:32px; }
+  .snapshot div{ font-size:14px; max-width:260px; }
+  .snapshot .k{ font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:var(--faint); margin-bottom:5px; font-weight:600; }
+  .case-body{ display:grid; grid-template-columns:1fr 1fr; gap:44px; }
+  @media (max-width:860px){ .case-body{ grid-template-columns:1fr; } }
+  .case-body h4{ font-size:11.5px; letter-spacing:0.05em; text-transform:uppercase; font-weight:700; color:var(--faint); margin-bottom:14px; }
+  .case-body h4.spaced{ margin-top:26px; }
+  .case-body p{ color:var(--muted); font-size:15.5px; line-height:1.75; }
+  .case-body li{ color:var(--muted); font-size:15px; line-height:1.65; padding-left:18px; position:relative; margin-bottom:11px; }
+  .case-body li::before{ content:"→"; position:absolute; left:0; color:var(--flame); }
 
-  .why-box{ margin-top:24px; padding:20px 22px; background:var(--panel); border-left:2px solid var(--verify); }
-  .why-box.paid{ border-left-color:var(--gold); }
-  .why-box .lead{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--faint); display:block; margin-bottom:9px; }
-  .why-box p{ margin:0; color:var(--fg); font-size:14.5px; line-height:1.65; }
+  .result-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .result-cell{ background:var(--ink3); border-radius:var(--r-md); padding:16px 18px; }
+  .result-cell .num{ font-family:'Bricolage Grotesque',sans-serif; font-weight:700; font-size:22px; }
+  .result-cell .lbl{ font-size:12px; color:var(--muted); margin-top:6px; line-height:1.4; }
 
-  /* ---------- disclosure (click to reveal) ---------- */
+  .why-box{ margin-top:24px; padding:22px 24px; background:rgba(255,91,61,0.07); border-radius:var(--r-md); position:relative; }
+  .why-box.paid{ background:rgba(255,184,77,0.07); }
+  .why-box .quote-mark{ font-family:'Bricolage Grotesque',sans-serif; font-size:44px; font-weight:700; color:var(--flame); opacity:0.35; line-height:0.5; display:block; margin-bottom:8px; }
+  .why-box.paid .quote-mark{ color:var(--amber); }
+  .why-box p{ margin:0; color:var(--fg); font-size:15px; line-height:1.65; }
+
   .disclosure-trigger{
     display:inline-flex; align-items:center; gap:9px; margin-top:28px;
-    font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:0.05em; text-transform:uppercase;
-    color:var(--fg); padding:12px 18px; border:1px solid var(--rule);
-    transition:border-color .2s, background .2s;
+    font-size:14px; font-weight:600; color:var(--flame);
+    padding:13px 20px; border:1.5px solid var(--flame-dim); border-radius:var(--r-pill);
+    transition:background .2s, border-color .2s;
   }
-  .disclosure-trigger:hover{ border-color:var(--verify); background:var(--panel); }
-  .disclosure-trigger .chev{ transition:transform .3s ease; font-size:13px; color:var(--verify); }
+  .disclosure-trigger:hover{ background:rgba(255,91,61,0.1); border-color:var(--flame); }
+  .disclosure-trigger .chev{ transition:transform .3s ease; font-size:13px; }
   .disclosure-trigger[aria-expanded="true"] .chev{ transform:rotate(180deg); }
   .disclosure-panel{ overflow:hidden; }
   html.js-motion .disclosure-panel{ height:0; }
@@ -245,126 +249,103 @@
   .proof-shots{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
   .proof-shots.single{ grid-template-columns:1fr; max-width:600px; }
   @media (max-width:700px){ .proof-shots{ grid-template-columns:1fr; } }
-  .shot{ border:1px solid var(--rule); background:#fff; }
+  .shot{ border-radius:var(--r-md); overflow:hidden; background:#fff; border:1px solid var(--line); }
   .shot img{ width:100%; display:block; }
-  .shot .cap{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--faint); padding:9px 11px; border-top:1px solid var(--rule); background:var(--ink); }
-  .exhibit-note{ margin-top:26px; font-size:13px; color:var(--faint); font-style:italic; }
+  .shot .cap{ font-size:11px; color:var(--faint); padding:10px 12px; border-top:1px solid var(--line); background:var(--ink2); }
+  .exhibit-note{ margin-top:26px; font-size:13.5px; color:var(--faint); }
 
   /* ---------- track record ---------- */
-  .role-row{ border-top:1px solid var(--rule); }
-  .role-row:last-of-type{ border-bottom:1px solid var(--rule); }
-  .role-trigger{ width:100%; display:flex; justify-content:space-between; align-items:flex-start; gap:20px; padding:24px 0; text-align:left; }
-  .role-trigger:hover .role-title{ color:var(--verify); }
+  .role-card{ background:var(--ink2); border:1px solid var(--line); border-radius:var(--r-md); margin-bottom:12px; transition:border-color .25s, transform .25s; }
+  .role-card:hover{ border-color:var(--flame-dim); }
+  .role-card:last-child{ margin-bottom:0; }
+  .role-trigger{ width:100%; display:flex; justify-content:space-between; align-items:flex-start; gap:20px; padding:24px 26px; text-align:left; }
+  .role-trigger:hover .role-title{ color:var(--flame); }
   .role-main{ flex:1; min-width:0; }
-  .role-title{ font-family:'Fraunces',serif; font-weight:600; font-size:18px; transition:color .2s; }
-  .role-co{ font-size:13.5px; color:var(--muted); margin-top:4px; }
-  .role-hi{ font-size:13.5px; color:var(--faint); margin-top:8px; max-width:560px; line-height:1.6; }
+  .role-title{ font-family:'Bricolage Grotesque',sans-serif; font-weight:700; font-size:18px; transition:color .2s; }
+  .role-co{ font-size:14px; color:var(--muted); margin-top:5px; }
   .role-meta{ display:flex; align-items:center; gap:14px; flex-shrink:0; }
-  .role-dates{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--faint); white-space:nowrap; text-align:right; }
-  .role-chev{ font-size:13px; color:var(--verify); transition:transform .3s ease; flex-shrink:0; }
+  .role-dates{ font-size:12.5px; color:var(--faint); white-space:nowrap; text-align:right; font-weight:500; }
+  .role-chev{ font-size:13px; color:var(--flame); transition:transform .3s ease; flex-shrink:0; }
   .role-trigger[aria-expanded="true"] .role-chev{ transform:rotate(180deg); }
   .role-panel{ overflow:hidden; }
   html.js-motion .role-panel{ height:0; }
-  .role-panel-inner{ padding:0 0 26px; max-width:640px; }
-  .role-panel-inner li{ color:var(--muted); font-size:14px; line-height:1.6; padding-left:16px; position:relative; margin-bottom:9px; }
-  .role-panel-inner li::before{ content:"–"; position:absolute; left:0; color:var(--faint); }
-  .edu-row{ display:flex; justify-content:space-between; align-items:baseline; gap:16px; padding:22px 0 0; flex-wrap:wrap; }
-  .edu-row .k{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--faint); margin-bottom:5px; }
+  .role-panel-inner{ padding:0 26px 26px; max-width:640px; }
+  .role-panel-inner li{ color:var(--muted); font-size:14.5px; line-height:1.65; padding-left:18px; position:relative; margin-bottom:10px; }
+  .role-panel-inner li::before{ content:"→"; position:absolute; left:0; color:var(--flame); }
+  .edu-row{ display:flex; justify-content:space-between; align-items:baseline; gap:16px; padding:26px 4px 0; flex-wrap:wrap; }
+  .edu-row .k{ font-size:11px; letter-spacing:0.05em; text-transform:uppercase; color:var(--faint); margin-bottom:5px; font-weight:600; }
   .edu-row .main{ font-size:14.5px; }
-  .edu-row .dates{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--faint); }
+  .edu-row .dates{ font-size:12.5px; color:var(--faint); }
 
-  /* ---------- certifications: each one its own paper card ---------- */
-  .cert-row{ padding:6px 26px; margin-bottom:14px; }
-  .cert-row:last-child{ margin-bottom:0; }
-  .cert-trigger{ width:100%; display:flex; justify-content:space-between; align-items:center; gap:20px; padding:20px 0; text-align:left; }
+  /* ---------- certifications ---------- */
+  .cert-card{ background:var(--ink2); border:1px solid var(--line); border-radius:var(--r-md); margin-bottom:12px; transition:border-color .25s; }
+  .cert-card:hover{ border-color:var(--amber-dim); }
+  .cert-card:last-child{ margin-bottom:0; }
+  .cert-trigger{ width:100%; display:flex; justify-content:space-between; align-items:center; gap:20px; padding:22px 26px; text-align:left; }
   .cert-trigger:disabled{ cursor:default; }
-  .cert-trigger:hover:not(:disabled) .cert-title{ color:var(--verify); }
-  .cert-title{ font-family:'Fraunces',serif; font-weight:600; font-size:16.5px; transition:color .2s; }
-  .cert-meta{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--faint); margin-top:5px; }
-  .cert-chev{ font-size:13px; color:var(--verify); transition:transform .3s ease; flex-shrink:0; }
+  .cert-trigger:hover:not(:disabled) .cert-title{ color:var(--amber); }
+  .cert-title{ font-family:'Bricolage Grotesque',sans-serif; font-weight:700; font-size:16.5px; transition:color .2s; }
+  .cert-meta{ font-size:12px; color:var(--faint); margin-top:6px; }
+  .cert-chev{ font-size:13px; color:var(--amber); transition:transform .3s ease; flex-shrink:0; }
   .cert-trigger[aria-expanded="true"] .cert-chev{ transform:rotate(180deg); }
   .cert-panel{ overflow:hidden; }
   html.js-motion .cert-panel{ height:0; }
-  .cert-panel-inner{ padding-bottom:28px; max-width:480px; }
-  .cert-panel-inner img{ border:1px solid var(--rule); }
+  .cert-panel-inner{ padding:0 26px 26px; max-width:480px; }
+  .cert-panel-inner img{ border-radius:var(--r-sm); }
 
-  /* ---------- services: individual paper cards on the dark canvas ---------- */
+  /* ---------- services ---------- */
   .services-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
   @media (max-width:920px){ .services-grid{ grid-template-columns:1fr 1fr; } }
   @media (max-width:560px){ .services-grid{ grid-template-columns:1fr; } }
-  .service-cell{ padding:28px 24px; }
-  .service-cell .idx{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--faint); margin-bottom:16px; }
-  .service-cell h4{ font-family:'Fraunces',serif; font-weight:600; font-size:17px; margin-bottom:11px; }
-  .service-cell p{ font-size:13.5px; color:var(--muted); line-height:1.6; }
+  .service-cell{ background:var(--ink2); border:1px solid var(--line); border-radius:var(--r-md); padding:28px 26px; transition:transform .3s ease, border-color .3s ease; will-change:transform; }
+  .service-cell:hover{ border-color:var(--flame-dim); }
+  .service-cell .idx{ font-family:'Bricolage Grotesque',sans-serif; font-size:26px; font-weight:700; color:var(--flame); margin-bottom:18px; opacity:0.7; }
+  .service-cell h4{ font-family:'Bricolage Grotesque',sans-serif; font-weight:700; font-size:17px; margin-bottom:11px; }
+  .service-cell p{ font-size:14px; color:var(--muted); line-height:1.6; }
 
   /* ---------- writing ---------- */
-  .writing-list{ display:flex; flex-direction:column; }
-  .writing-row{ border-top:1px solid var(--rule); padding:22px 0; display:flex; justify-content:space-between; align-items:center; gap:20px; transition:opacity .2s; }
-  .writing-list a:last-child .writing-row{ border-bottom:1px solid var(--rule); }
-  .writing-row:hover{ opacity:0.7; }
-  .writing-row .t{ font-family:'Fraunces',serif; font-size:17px; font-weight:600; }
-  .writing-row .s{ font-size:13px; color:var(--faint); margin-top:5px; max-width:520px; }
-  .writing-row .go{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--verify); white-space:nowrap; }
+  .writing-list{ display:flex; flex-direction:column; gap:12px; }
+  .writing-row{ background:var(--ink2); border:1px solid var(--line); border-radius:var(--r-md); padding:24px 26px; display:flex; justify-content:space-between; align-items:center; gap:20px; transition:border-color .25s, transform .25s; }
+  .writing-row:hover{ border-color:var(--flame-dim); transform:translateX(4px); }
+  .writing-row .t{ font-family:'Bricolage Grotesque',sans-serif; font-size:17px; font-weight:700; }
+  .writing-row .s{ font-size:13.5px; color:var(--faint); margin-top:6px; max-width:520px; }
+  .writing-row .go{ font-size:13px; font-weight:600; color:var(--flame); white-space:nowrap; }
   @media (max-width:640px){ .writing-row{ flex-direction:column; align-items:flex-start; } }
 
   /* ---------- resume band ---------- */
-  .resume-band{ background:var(--panel); border:1px solid var(--rule); padding:44px; display:flex; justify-content:space-between; align-items:center; gap:24px; flex-wrap:wrap; }
-  .resume-band h3{ font-size:22px; margin-bottom:8px; }
-  .resume-band p{ font-size:14.5px; color:var(--muted); max-width:440px; }
+  .resume-band{ background:linear-gradient(120deg, rgba(255,91,61,0.14), rgba(255,184,77,0.1)); border:1px solid var(--line); border-radius:var(--r-lg); padding:48px; display:flex; justify-content:space-between; align-items:center; gap:24px; flex-wrap:wrap; }
+  .resume-band h3{ font-size:24px; margin-bottom:9px; }
+  .resume-band p{ font-size:15px; color:var(--muted); max-width:440px; }
 
   /* ---------- contact ---------- */
   .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:60px; }
   @media (max-width:860px){ .contact-grid{ grid-template-columns:1fr; gap:44px; } }
-  .contact-grid h2{ font-size:clamp(30px,4vw,42px); margin-bottom:18px; max-width:480px; }
-  .contact-grid > div:first-child > p{ font-size:15px; color:var(--muted); line-height:1.7; margin-bottom:28px; max-width:420px; }
-  .contact-links{ display:flex; flex-direction:column; gap:15px; }
-  .contact-links a{ font-size:14.5px; font-weight:500; display:inline-flex; align-items:center; gap:10px; transition:color .2s; }
-  .contact-links a:hover{ color:var(--verify); }
-  .contact-links .ico{ color:var(--verify); font-family:'IBM Plex Mono',monospace; }
+  .contact-grid h2{ font-size:clamp(32px,4.4vw,48px); margin-bottom:18px; max-width:480px; }
+  .contact-grid > div:first-child > p{ font-size:16px; color:var(--muted); line-height:1.75; margin-bottom:30px; max-width:420px; }
+  .contact-links{ display:flex; flex-direction:column; gap:14px; }
+  .contact-links a{ font-size:15px; font-weight:600; display:inline-flex; align-items:center; gap:12px; transition:color .2s; }
+  .contact-links a:hover{ color:var(--flame); }
+  .contact-links .ico{ width:38px; height:38px; border-radius:50%; background:var(--ink3); display:inline-flex; align-items:center; justify-content:center; color:var(--flame); flex-shrink:0; font-size:15px; }
 
-  form.contact-form{ background:var(--panel); border:1px solid var(--rule); padding:32px; display:flex; flex-direction:column; gap:18px; }
-  .field label{ font-size:11.5px; font-weight:600; letter-spacing:0.05em; text-transform:uppercase; color:var(--faint); display:block; margin-bottom:9px; font-family:'IBM Plex Mono',monospace; }
+  form.contact-form{ background:var(--ink2); border:1px solid var(--line); border-radius:var(--r-lg); padding:34px; display:flex; flex-direction:column; gap:18px; }
+  .field label{ font-size:12px; font-weight:600; color:var(--faint); display:block; margin-bottom:9px; }
   .field input, .field textarea{
-    width:100%; background:var(--ink); border:1px solid var(--rule); color:var(--fg);
-    padding:13px 14px; font-size:14.5px; font-family:inherit; transition:border-color .2s;
+    width:100%; background:var(--ink3); border:1px solid var(--line); color:var(--fg); border-radius:var(--r-sm);
+    padding:14px 16px; font-size:14.5px; font-family:inherit; transition:border-color .2s;
   }
-  .field input:focus, .field textarea:focus{ border-color:var(--verify); outline:none; }
+  .field input:focus, .field textarea:focus{ border-color:var(--flame); outline:none; }
   .field textarea{ resize:vertical; }
   .hp-field{ position:absolute; left:-9999px; }
   .form-status{ font-size:13.5px; color:var(--muted); min-height:18px; }
-  .form-status.ok{ color:var(--verify); }
-
-  /* ---------- hero mini chart ---------- */
-  .mini-chart{ padding-bottom:20px; margin-bottom:20px; border-bottom:1px solid var(--rule-soft); }
-  .mini-chart-head{ display:flex; justify-content:space-between; align-items:center; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.07em; text-transform:uppercase; color:var(--faint); margin-bottom:12px; }
-  .mini-chart-head .tag{ color:var(--verify); }
-  .chart-svg{ width:100%; height:52px; display:block; overflow:visible; }
-  .chart-grid{ stroke:var(--rule-soft); stroke-width:1; }
-  .chart-line{ fill:none; stroke:var(--verify); stroke-width:2; stroke-linecap:round; }
-  .chart-dot{ fill:var(--verify); }
-  .mini-chart-foot{ display:flex; align-items:baseline; gap:10px; margin-top:12px; }
-  .mini-chart-foot .num{ font-family:'IBM Plex Mono',monospace; font-size:19px; font-weight:600; }
-  .mini-chart-foot .arrow{ color:var(--faint); font-size:14px; }
-  .mini-chart-foot .lbl{ font-size:12px; color:var(--muted); margin-left:2px; }
-
-  /* ---------- ticker ---------- */
-  .ticker-wrap{ overflow:hidden; border-top:1px solid var(--rule); padding:22px 0; }
-  .ticker-track{ display:flex; width:max-content; }
-  .ticker-track span{ font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:0.05em; text-transform:uppercase; color:var(--faint); white-space:nowrap; padding:0 22px; display:inline-flex; align-items:center; gap:22px; }
-  .ticker-track span::after{ content:"·"; color:var(--rule); }
-
-  /* ---------- exhibit trend strip ---------- */
-  .trend-strip{ margin-bottom:16px; }
-  .trend-strip svg{ width:100%; height:34px; display:block; overflow:visible; }
-  .spark-line{ fill:none; stroke-width:2; stroke-linecap:round; }
+  .form-status.ok{ color:var(--flame); }
 
   /* ---------- footer ---------- */
-  footer{ border-top:1px solid var(--rule); padding:30px 0; }
+  footer{ border-top:1px solid var(--line); padding:32px 0; }
   footer .wrap{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
-  footer .f-links{ display:flex; gap:22px; }
-  footer a{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--faint); transition:color .2s; }
+  footer .f-links{ display:flex; gap:24px; }
+  footer a{ font-size:13px; color:var(--faint); transition:color .2s; }
   footer a:hover{ color:var(--fg); }
-  footer .copy{ font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--faint); }
+  footer .copy{ font-size:13px; color:var(--faint); }
 </style>
 </head>
 <body>
@@ -374,16 +355,19 @@
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
 <header>
   <div class="wrap">
     <nav>
-      <a href="#top" class="logo"><span class="sq"></span>SIDDHARTH SINGH</a>
+      <a href="#top" class="logo"><span class="dot"></span>SIDDHARTH SINGH</a>
       <div class="navlinks">
         <a href="#work">Work</a>
         <a href="#track-record">Track Record</a>
         <a href="#certifications">Certifications</a>
         <a href="#writing">Writing</a>
-        <a href="#contact" class="btn" data-track="cta_click" data-cta="nav_contact">Contact</a>
+        <a href="#contact" class="btn ghost" data-track="cta_click" data-cta="nav_contact">Contact</a>
       </div>
       <a href="#contact" class="btn solid navmobile" data-track="cta_click" data-cta="nav_contact_mobile">Contact</a>
     </nav>
@@ -394,10 +378,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <!-- HERO -->
   <section class="hero">
+    <div class="blob blob-a" id="blobA" aria-hidden="true"></div>
+    <div class="blob blob-b" id="blobB" aria-hidden="true"></div>
     <div class="wrap hero-grid">
       <div>
-        <div class="eyebrow"><span class="dot"></span>PERFORMANCE MARKETING · SEO · PAID MEDIA</div>
-        <h1 class="headline">I make marketing budgets prove themselves.</h1>
+        <div class="eyebrow"><span class="dot"></span>Performance Marketing · SEO · Paid Media</div>
+        <h1 class="headline" id="headline">I make marketing budgets <span class="accent">prove themselves.</span></h1>
         <p class="sub">7+ years running SEO, paid media, and content end to end for B2B SaaS, healthcare, and eCommerce brands. Recent focus: AI search visibility (AEO/GEO) and Google AI Overview placements. Every number on this page is pulled straight from Search Console, GA4, or campaign reporting.</p>
         <div class="hero-cta">
           <a href="#work" class="btn solid" data-track="cta_click" data-cta="hero_case_studies">See the case studies</a>
@@ -405,22 +391,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </div>
 
-      <div class="ledger-card paper-card" id="hero-card">
-        <div class="stamp" id="hero-stamp" aria-hidden="true">
-          <svg viewBox="0 0 120 120">
-            <circle cx="60" cy="60" r="54" fill="none" stroke="currentColor" stroke-width="1.4"/>
-            <circle cx="60" cy="60" r="45" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="1.5 3.5"/>
-            <path id="stampPath" d="M 60,15 A 45,45 0 1 1 59.9,15" fill="none"/>
-            <text font-family="'IBM Plex Mono',monospace" font-size="8.6" letter-spacing="2.6" fill="currentColor">
-              <textPath href="#stampPath" startOffset="2%">VERIFIED RESULTS · VERIFIED RESULTS ·</textPath>
-            </text>
-            <g transform="translate(60,62)">
-              <path d="M-13,0 L-3,10 L15,-12" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </g>
-          </svg>
-        </div>
-        <div class="ledger-head">
-          <img class="monogram" src="assets/headshot.jpg" alt="Siddharth Singh">
+      <div class="hero-card reveal" id="hero-card">
+        <div class="hero-card-head">
+          <img class="avatar" src="assets/headshot.jpg" alt="Siddharth Singh">
           <div>
             <div class="name">Siddharth Singh</div>
             <div class="role">Performance Marketing Manager, Bengaluru</div>
@@ -431,28 +404,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <span>Avg. search position, healthcare account</span>
             <span class="tag">Search Console</span>
           </div>
-          <svg class="chart-svg" viewBox="0 0 280 52" preserveAspectRatio="none" aria-hidden="true">
-            <line x1="0" y1="8" x2="280" y2="8" class="chart-grid"/>
-            <line x1="0" y1="26" x2="280" y2="26" class="chart-grid"/>
-            <line x1="0" y1="44" x2="280" y2="44" class="chart-grid"/>
+          <svg class="chart-svg" viewBox="0 0 280 50" preserveAspectRatio="none" aria-hidden="true">
             <path id="chartPath" class="chart-line" d="M0,10 C50,16 70,30 110,34 C150,38 180,26 210,20 C235,15 255,10 280,6"/>
-            <circle id="chartDot" class="chart-dot" cx="280" cy="6" r="3.5"/>
+            <circle id="chartDot" class="chart-dot" cx="280" cy="6" r="4"/>
           </svg>
           <div class="mini-chart-foot">
             <span class="num" id="chartFrom">8.0</span>
             <span class="arrow">→</span>
-            <span class="num v-verify" id="chartTo">4.5</span>
+            <span class="num" style="color:var(--flame);" id="chartTo">4.5</span>
             <span class="lbl">avg. position</span>
           </div>
         </div>
-        <div>
-          <div class="stat-row">
-            <span class="label">Revenue from repeat customers</span>
-            <span class="value v-gold">60–80%</span>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="num" style="color:var(--amber);">60–80%</div>
+            <div class="lbl">Revenue from repeat customers</div>
           </div>
-          <div class="stat-row">
-            <span class="label">Sustained paid return, 3 verticals</span>
-            <span class="value v-gold">1.8×</span>
+          <div class="hero-stat">
+            <div class="num" style="color:var(--amber);">1.8×</div>
+            <div class="lbl">Sustained paid return, 3 verticals</div>
           </div>
         </div>
       </div>
@@ -460,23 +430,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </section>
 
   <!-- PROOF STRIP -->
-  <section id="proof" style="padding-top:0; padding-bottom:0;">
+  <section id="proof" style="padding:0 0 90px;">
     <div class="wrap">
       <div class="proof-strip reveal">
         <div class="proof-cell">
-          <div class="num mono" data-count-to="7" data-count-suffix="+">0</div>
+          <div class="num display" style="color:var(--flame);" data-count-to="7" data-count-suffix="+">0</div>
           <div class="lbl">Years in performance marketing</div>
         </div>
         <div class="proof-cell">
-          <div class="num mono" style="color:var(--verify);">8 → 4.5</div>
+          <div class="num display">8 → 4.5</div>
           <div class="lbl">Avg. search position, healthcare account</div>
         </div>
         <div class="proof-cell">
-          <div class="num mono" style="color:var(--verify);" data-count-to="61" data-count-suffix="%">0%</div>
+          <div class="num display" style="color:var(--flame);" data-count-to="61" data-count-suffix="%">0%</div>
           <div class="lbl">Fewer wasted impressions, clicks held steady</div>
         </div>
         <div class="proof-cell">
-          <div class="num mono" style="color:var(--gold);" data-count-to="1.8" data-count-decimals="1" data-count-suffix="×">0×</div>
+          <div class="num display" style="color:var(--amber);" data-count-to="1.8" data-count-decimals="1" data-count-suffix="×">0×</div>
           <div class="lbl">Sustained paid return, 3 verticals</div>
         </div>
       </div>
@@ -486,28 +456,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- TOOLS TICKER -->
   <div class="ticker-wrap" aria-hidden="true">
     <div class="ticker-track" id="tickerTrack">
-      <span>Google Ads</span><span>Meta Ads</span><span>LinkedIn Ads</span><span>GA4</span><span>Google Tag Manager</span><span>Search Console</span><span>Looker Studio</span><span>Ahrefs</span><span>SEMrush</span><span>Screaming Frog</span><span>WordPress</span><span>Shopify</span><span>HubSpot</span><span>Claude</span><span>ChatGPT</span><span>Gemini</span><span>Google Ads</span><span>Meta Ads</span><span>LinkedIn Ads</span><span>GA4</span><span>Google Tag Manager</span><span>Search Console</span><span>Looker Studio</span><span>Ahrefs</span><span>SEMrush</span><span>Screaming Frog</span><span>WordPress</span><span>Shopify</span><span>HubSpot</span><span>Claude</span><span>ChatGPT</span><span>Gemini</span>
+      <span>Google Ads</span><span>Meta Ads</span><span>LinkedIn Ads</span><span>GA4</span><span>Google Tag Manager</span><span>Search Console</span><span>Looker Studio</span><span>Ahrefs</span><span>SEMrush</span><span>HubSpot</span><span>Claude</span><span>ChatGPT</span><span>Gemini</span><span>Google Ads</span><span>Meta Ads</span><span>LinkedIn Ads</span><span>GA4</span><span>Google Tag Manager</span><span>Search Console</span><span>Looker Studio</span><span>Ahrefs</span><span>SEMrush</span><span>HubSpot</span><span>Claude</span><span>ChatGPT</span><span>Gemini</span>
     </div>
   </div>
 
-  <!-- WORK / EXHIBITS -->
+  <!-- WORK / CASE STUDIES -->
   <section id="work">
     <div class="wrap">
       <div class="sec-head reveal">
         <h2>Verified work,<br>not just claims</h2>
-        <div class="sec-note">Client names are withheld under NDA. Industries and every number are not. Click into an exhibit to see the underlying screenshot.</div>
+        <div class="sec-note">Client names are withheld under NDA. Industries and every number are not. Click into a case study to see the underlying screenshot.</div>
       </div>
 
-      <!-- EXHIBIT A -->
-      <div class="exhibit reveal">
-        <div class="exhibit-tag seo"><span class="dot"></span>Exhibit A · SEO</div>
+      <!-- CASE 1 -->
+      <div class="case reveal">
+        <div class="case-tag seo"><span class="dot"></span>SEO</div>
         <h3>From position 8 to inside the top five</h3>
         <div class="snapshot">
           <div><div class="k">Channel</div>Organic search</div>
           <div><div class="k">Client</div>Healthcare brand</div>
           <div><div class="k">Window</div>Sep 2025 – Jan 2026 vs. prior period</div>
         </div>
-        <div class="exhibit-body">
+        <div class="case-body">
           <div>
             <h4>Situation</h4>
             <p>The client's core pages sat around position 8 on average — visible, but well below where clicks actually happen. The work was to close the gap between ranking and ranking usefully.</p>
@@ -520,15 +490,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
           <div>
             <h4>Results, verified</h4>
-            <div class="trend-strip"><svg viewBox="0 0 240 34" preserveAspectRatio="none" aria-hidden="true"><path class="spark-line trend-path" style="stroke:var(--verify)" d="M2,30 C40,29 60,24 90,22 C130,19 160,12 200,8 C215,6 225,5 238,3"/></svg></div>
-            <div class="results-table">
-              <div class="stat-row"><span class="label">Average position</span><span class="value v-verify">8 → 4.5</span></div>
-              <div class="stat-row"><span class="label">Clicks, roughly doubled</span><span class="value v-verify">4.35K → 8.74K</span></div>
-              <div class="stat-row"><span class="label">Impressions</span><span class="value">1.76M → 2.35M</span></div>
-              <div class="stat-row"><span class="label">Active users, GA4</span><span class="value">+113.9%</span></div>
+            <div class="result-grid">
+              <div class="result-cell"><div class="num" style="color:var(--flame);">8 → 4.5</div><div class="lbl">Average position</div></div>
+              <div class="result-cell"><div class="num" style="color:var(--flame);">4.35K → 8.74K</div><div class="lbl">Clicks, roughly doubled</div></div>
+              <div class="result-cell"><div class="num">1.76M → 2.35M</div><div class="lbl">Impressions</div></div>
+              <div class="result-cell"><div class="num">+113.9%</div><div class="lbl">Active users, GA4</div></div>
             </div>
             <div class="why-box">
-              <span class="lead">Why it mattered</span>
+              <span class="quote-mark">"</span>
               <p>Position, clicks, and impressions all moved together, and the GA4 numbers confirm the extra visibility turned into real sessions on the site — not a lucky spike.</p>
             </div>
           </div>
@@ -545,16 +514,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </div>
 
-      <!-- EXHIBIT B -->
-      <div class="exhibit reveal">
-        <div class="exhibit-tag seo"><span class="dot"></span>Exhibit B · SEO</div>
+      <!-- CASE 2 -->
+      <div class="case reveal">
+        <div class="case-tag seo"><span class="dot"></span>SEO</div>
         <h3>Cutting 61% of wasted impressions without losing a click</h3>
         <div class="snapshot">
           <div><div class="k">Channel</div>Organic search</div>
           <div><div class="k">Client</div>B2B SaaS / services</div>
           <div><div class="k">Window</div>Sep 2025 – Jan 2026 vs. prior period</div>
         </div>
-        <div class="exhibit-body">
+        <div class="case-body">
           <div>
             <h4>Situation</h4>
             <p>Not every SEO win looks like more traffic. This account ranked for a wide spread of loosely relevant terms, racking up impressions that rarely converted into clicks. Average position sat around 62, deep on page six or beyond.</p>
@@ -567,15 +536,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
           <div>
             <h4>Results, verified</h4>
-            <div class="trend-strip"><svg viewBox="0 0 240 34" preserveAspectRatio="none" aria-hidden="true"><path class="spark-line trend-path" style="stroke:var(--verify)" d="M2,30 C40,29 60,24 90,22 C130,19 160,12 200,8 C215,6 225,5 238,3"/></svg></div>
-            <div class="results-table">
-              <div class="stat-row"><span class="label">Average position, roughly halved</span><span class="value v-verify">62.1 → 31.1</span></div>
-              <div class="stat-row"><span class="label">Average CTR, nearly 4×</span><span class="value v-verify">0.2% → 0.7%</span></div>
-              <div class="stat-row"><span class="label">Impressions, cut by design</span><span class="value">557K → 217K</span></div>
-              <div class="stat-row"><span class="label">Clicks, held and ticked up</span><span class="value">1.32K → 1.47K</span></div>
+            <div class="result-grid">
+              <div class="result-cell"><div class="num" style="color:var(--flame);">62.1 → 31.1</div><div class="lbl">Average position, roughly halved</div></div>
+              <div class="result-cell"><div class="num" style="color:var(--flame);">0.2% → 0.7%</div><div class="lbl">Average CTR, nearly 4×</div></div>
+              <div class="result-cell"><div class="num">557K → 217K</div><div class="lbl">Impressions, cut by design</div></div>
+              <div class="result-cell"><div class="num">1.32K → 1.47K</div><div class="lbl">Clicks, held and ticked up</div></div>
             </div>
             <div class="why-box">
-              <span class="lead">Why it mattered</span>
+              <span class="quote-mark">"</span>
               <p>Anyone can chase impression volume. Choosing to shrink it on purpose, and proving clicks didn't suffer, is a judgment call that separates a manager from an executor.</p>
             </div>
           </div>
@@ -592,16 +560,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </div>
 
-      <!-- EXHIBIT C -->
-      <div class="exhibit reveal">
-        <div class="exhibit-tag paid"><span class="dot"></span>Exhibit C · Paid Media</div>
+      <!-- CASE 3 -->
+      <div class="case reveal">
+        <div class="case-tag paid"><span class="dot"></span>Paid Media</div>
         <h3>Full-funnel media across three buyer journeys</h3>
         <div class="snapshot">
           <div><div class="k">Role</div>Owned paid strategy end to end, led weekly client calls</div>
           <div><div class="k">Budget</div>~₹5L/month across Meta + Google Ads</div>
           <div><div class="k">Clients</div>B2B SaaS, tech, and service accounts, incl. one US-based relationship</div>
         </div>
-        <div class="exhibit-body">
+        <div class="case-body">
           <div>
             <h4>Situation</h4>
             <p>Three verticals, three buyer behaviors, one shared budget to allocate intelligently. The job wasn't just running campaigns — it was building them from scratch and making the channel-mix calls that decide whether spend turns into revenue.</p>
@@ -615,15 +583,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
           <div>
             <h4>Results</h4>
-            <div class="trend-strip"><svg viewBox="0 0 240 34" preserveAspectRatio="none" aria-hidden="true"><path class="spark-line trend-path" style="stroke:var(--gold)" d="M2,30 C40,29 60,24 90,22 C130,19 160,12 200,8 C215,6 225,5 238,3"/></svg></div>
-            <div class="results-table">
-              <div class="stat-row"><span class="label">CAC, healthcare account</span><span class="value v-gold">~₹3,000</span></div>
-              <div class="stat-row"><span class="label">Revenue from repeat customers</span><span class="value v-gold">60–80%</span></div>
-              <div class="stat-row"><span class="label">Monthly spend to tracked revenue</span><span class="value">₹1.65L → ₹2.95L</span></div>
-              <div class="stat-row"><span class="label">Sustained return</span><span class="value">~1.8×</span></div>
+            <div class="result-grid">
+              <div class="result-cell"><div class="num" style="color:var(--amber);">~₹3,000</div><div class="lbl">CAC, healthcare account</div></div>
+              <div class="result-cell"><div class="num" style="color:var(--amber);">60–80%</div><div class="lbl">Revenue from repeat customers</div></div>
+              <div class="result-cell"><div class="num">₹1.65L → ₹2.95L</div><div class="lbl">Monthly spend to tracked revenue</div></div>
+              <div class="result-cell"><div class="num">~1.8×</div><div class="lbl">Sustained return</div></div>
             </div>
             <div class="why-box paid">
-              <span class="lead">Why it mattered</span>
+              <span class="quote-mark">"</span>
               <p>The repeat-revenue number is the real story. The work wasn't just buying clicks — it was building a retention engine on top of acquisition.</p>
             </div>
           </div>
@@ -643,14 +610,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
 
       <div class="reveal">
-        <div class="role-row">
+        <div class="role-card">
           <button class="role-trigger" aria-expanded="false" aria-controls="role-1" data-role-trigger data-track="expand_role" data-role="BetaTest Solutions">
             <div class="role-main">
               <div class="role-title">Digital Marketing Manager — BetaTest Solutions</div>
               <div class="role-co">Owned SEO and paid media end to end; moved a healthcare account from position 8 to 4.5</div>
             </div>
             <div class="role-meta">
-              <span class="role-dates mono">May 2025 – Feb 2026</span>
+              <span class="role-dates">May 2025 – Feb 2026</span>
               <span class="role-chev">⌄</span>
             </div>
           </button>
@@ -666,14 +633,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
         </div>
 
-        <div class="role-row">
+        <div class="role-card">
           <button class="role-trigger" aria-expanded="false" aria-controls="role-2" data-role-trigger data-track="expand_role" data-role="Infosys BPM">
             <div class="role-main">
               <div class="role-title">Process Specialist, Digital Content — Infosys BPM</div>
               <div class="role-co">Part of a team managing ~£45K/month in Meta ad spend for consumer electronics</div>
             </div>
             <div class="role-meta">
-              <span class="role-dates mono">Sep 2023 – Oct 2024</span>
+              <span class="role-dates">Sep 2023 – Oct 2024</span>
               <span class="role-chev">⌄</span>
             </div>
           </button>
@@ -689,14 +656,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
         </div>
 
-        <div class="role-row">
+        <div class="role-card">
           <button class="role-trigger" aria-expanded="false" aria-controls="role-3" data-role-trigger data-track="expand_role" data-role="CoolBoots Media">
             <div class="role-main">
               <div class="role-title">Senior Content Strategist — CoolBoots Media Pvt. Ltd.</div>
               <div class="role-co">Ran paid acquisition for gaming and trivia apps at CPCs of ₹2–15 and 4–5% CTR</div>
             </div>
             <div class="role-meta">
-              <span class="role-dates mono">Dec 2019 – May 2023</span>
+              <span class="role-dates">Dec 2019 – May 2023</span>
               <span class="role-chev">⌄</span>
             </div>
           </button>
@@ -712,14 +679,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
         </div>
 
-        <div class="role-row">
+        <div class="role-card">
           <button class="role-trigger" aria-expanded="false" aria-controls="role-4" data-role-trigger data-track="expand_role" data-role="Psychenation.store">
             <div class="role-main">
               <div class="role-title">Digital Content Strategist — Psychenation.store</div>
               <div class="role-co">Solo-ran paid social on a ₹30K/month budget to 4× ROAS and a 5× sales lift</div>
             </div>
             <div class="role-meta">
-              <span class="role-dates mono">Dec 2018 – Nov 2019</span>
+              <span class="role-dates">Dec 2018 – Nov 2019</span>
               <span class="role-chev">⌄</span>
             </div>
           </button>
@@ -735,14 +702,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
         </div>
 
-        <div class="role-row">
+        <div class="role-card">
           <button class="role-trigger" aria-expanded="false" aria-controls="role-5" data-role-trigger data-track="expand_role" data-role="IXXO">
             <div class="role-main">
               <div class="role-title">Research & Strategy Associate — IXXO (fka Rockchain.org)</div>
               <div class="role-co">Reported to the CEO; built investor cases on blockchain technology</div>
             </div>
             <div class="role-meta">
-              <span class="role-dates mono">Aug 2017 – Nov 2018</span>
+              <span class="role-dates">Aug 2017 – Nov 2018</span>
               <span class="role-chev">⌄</span>
             </div>
           </button>
@@ -776,7 +743,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="sec-note">Click a certification to view the original.</div>
       </div>
       <div class="reveal">
-        <div class="cert-row paper-card">
+        <div class="cert-card">
           <button class="cert-trigger" aria-expanded="false" aria-controls="cert-1" data-cert-trigger data-track="view_certificate" data-cert="hubspot">
             <div>
               <div class="cert-title">HubSpot Content Marketing Certified</div>
@@ -791,7 +758,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
         </div>
 
-        <div class="cert-row paper-card">
+        <div class="cert-card">
           <button class="cert-trigger" aria-expanded="false" aria-controls="cert-2" data-cert-trigger data-track="view_certificate" data-cert="google_ads">
             <div>
               <div class="cert-title">Google Ads Search Professional Certification</div>
@@ -806,7 +773,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
         </div>
 
-        <div class="cert-row paper-card">
+        <div class="cert-card">
           <button class="cert-trigger" disabled aria-expanded="false">
             <div>
               <div class="cert-title">Infosys Team Extra Miler Award</div>
@@ -825,28 +792,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <h2>What I can help with</h2>
       </div>
       <div class="services-grid reveal">
-        <div class="service-cell paper-card">
-          <div class="idx mono">01</div>
+        <div class="service-cell" data-tilt>
+          <div class="idx">01</div>
           <h4>Paid Media Management</h4>
           <p>Google Ads, Meta Ads, and LinkedIn Ads — campaign build and optimization, from Performance Max setup to full-funnel remarketing.</p>
         </div>
-        <div class="service-cell paper-card">
-          <div class="idx mono">02</div>
+        <div class="service-cell" data-tilt>
+          <div class="idx">02</div>
           <h4>SEO & AI Search Visibility</h4>
           <p>Technical SEO plus the newer discipline of showing up in AI-generated answers: Google AI Overviews, ChatGPT, Perplexity.</p>
         </div>
-        <div class="service-cell paper-card">
-          <div class="idx mono">03</div>
+        <div class="service-cell" data-tilt>
+          <div class="idx">03</div>
           <h4>Content Strategy & Copywriting</h4>
           <p>Website copy, product pages, and content calendars built to convert the traffic you're already paying for.</p>
         </div>
-        <div class="service-cell paper-card">
-          <div class="idx mono">04</div>
+        <div class="service-cell" data-tilt>
+          <div class="idx">04</div>
           <h4>Analytics & Tracking Setup</h4>
           <p>GA4, Google Tag Manager, and Search Console configured correctly, so every campaign above can actually be measured.</p>
         </div>
-        <div class="service-cell paper-card">
-          <div class="idx mono">05</div>
+        <div class="service-cell" data-tilt>
+          <div class="idx">05</div>
           <h4>AI-Assisted Workflow Design</h4>
           <p>Claude, Gemini, and ChatGPT-based workflows for ad copy testing, reporting, and content briefs, built to be adopted team-wide.</p>
         </div>
@@ -887,7 +854,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- RESUME CTA -->
   <section style="padding-top:0;">
     <div class="wrap">
-      <div class="resume-band paper-card reveal">
+      <div class="resume-band reveal">
         <div>
           <h3>Want the full picture?</h3>
           <p>7+ years across SEO, paid media, and content — roles, tools, and results in one document.</p>
@@ -945,9 +912,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/DrawSVGPlugin.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/MotionPathPlugin.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrambleTextPlugin.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/SplitText.min.js"></script>
 <script>
 (function(){
 
@@ -961,8 +930,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     } else if(event === 'outbound_click'){
       gtmTrack('outbound_click', { url: el.href, label: el.getAttribute('data-label') });
     }
-    // view_exhibit_proof / view_certificate / expand_role are fired from
-    // their own toggle handlers below (only on the *opening* action).
   }, true);
 
   /* ---------- section view tracking ---------- */
@@ -1012,10 +979,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   var hasGSAP = window.gsap;
 
   if(!hasGSAP){
-    // GSAP failed to load (offline/CDN blocked) — wire up disclosures with
-    // a plain CSS-class fallback, and still fill in the numbers that would
-    // otherwise be stuck at their "0" placeholder, so the site stays fully
-    // functional and correct without the library.
     document.documentElement.classList.remove('js-motion');
     document.querySelectorAll('[data-count-to]').forEach(function(el){
       var to = parseFloat(el.getAttribute('data-count-to'));
@@ -1027,10 +990,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
 
   document.documentElement.classList.add('js-motion');
-  if(window.DrawSVGPlugin && window.MotionPathPlugin && window.ScrambleTextPlugin){
-    gsap.registerPlugin(DrawSVGPlugin, MotionPathPlugin, ScrambleTextPlugin);
-  }
+  var hasST = !!window.ScrollTrigger;
   var hasPlugins = !!(window.DrawSVGPlugin && window.MotionPathPlugin && window.ScrambleTextPlugin);
+  var hasSplit = !!window.SplitText;
+  if(hasST) gsap.registerPlugin(ScrollTrigger);
+  if(hasPlugins) gsap.registerPlugin(DrawSVGPlugin, MotionPathPlugin, ScrambleTextPlugin);
+  if(hasSplit) gsap.registerPlugin(SplitText);
 
   function animateCount(el){
     var to = parseFloat(el.getAttribute('data-count-to'));
@@ -1041,46 +1006,57 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       gsap.to(el, { duration:1.1, scrambleText:{ text:target, chars:'0123456789', speed:0.3, revealDelay:0.15 }, ease:'none' });
     } else {
       var obj = { v: 0 };
-      gsap.to(obj, {
-        v: to, duration:1.4, ease:'power2.out',
-        onUpdate: function(){ el.textContent = obj.v.toFixed(decimals) + suffix; }
-      });
+      gsap.to(obj, { v: to, duration:1.4, ease:'power2.out', onUpdate: function(){ el.textContent = obj.v.toFixed(decimals) + suffix; } });
     }
   }
 
+  /* ---------- scroll progress bar (continuous scrub — safe from the
+     "instant jump" edge-trigger issue since it just maps current scroll
+     to a value every tick, nothing to miss) ---------- */
+  if(hasST){
+    gsap.to('#progressFill', {
+      scaleX:1, ease:'none',
+      scrollTrigger:{ trigger:document.body, start:'top top', end:'bottom bottom', scrub:0.3 }
+    });
+  }
+
   var mm = gsap.matchMedia();
+
   mm.add('(prefers-reduced-motion: no-preference)', function(){
+
+    /* ambient hero blobs: slow continuous drift, purely decorative */
+    gsap.to('#blobA', { x:50, y:36, duration:10, ease:'sine.inOut', yoyo:true, repeat:-1 });
+    gsap.to('#blobB', { x:-40, y:-30, duration:12, ease:'sine.inOut', yoyo:true, repeat:-1, delay:.6 });
 
     /* hero entrance timeline */
     var tl = gsap.timeline({ defaults:{ ease:'power3.out' } });
-    tl.from('.eyebrow', { opacity:0, y:14, duration:.6 })
-      .from('h1.headline', { opacity:0, y:22, duration:.75 }, '-=.4')
+    if(hasSplit){
+      var split = SplitText.create('#headline', { type:'words' });
+      tl.from(split.words, { opacity:0, y:34, rotate:4, duration:.8, stagger:.05 });
+    } else {
+      tl.from('#headline', { opacity:0, y:26, duration:.8 });
+    }
+    tl.from('.eyebrow', { opacity:0, y:14, duration:.5 }, 0)
       .from('.hero p.sub', { opacity:0, y:18, duration:.7 }, '-=.5')
       .from('.hero-cta a', { opacity:0, y:14, duration:.6, stagger:.08 }, '-=.45')
-      .from('#hero-card', { opacity:0, y:26, duration:.8 }, '-=.6')
-      .from('#hero-stamp', { opacity:0, scale:2.1, rotate:-18, duration:.55, ease:'back.out(2.2)' }, '-=.25');
+      .from('#hero-card', { opacity:0, y:26, scale:.97, duration:.8 }, '-=.6');
 
     if(hasPlugins){
       var chartPath = document.getElementById('chartPath');
       var chartDot = document.getElementById('chartDot');
       var chartFrom = document.getElementById('chartFrom');
       var chartTo = document.getElementById('chartTo');
-      tl.from(chartPath, { drawSVG:0, duration:1.1, ease:'power2.inOut' }, '-=.5')
-        .to(chartDot, {
-          motionPath:{ path:chartPath, align:chartPath, alignOrigin:[0.5,0.5] },
-          duration:1.1, ease:'power2.inOut'
-        }, '<')
+      tl.from(chartPath, { drawSVG:0, duration:1.1, ease:'power2.inOut' }, '-=.4')
+        .to(chartDot, { motionPath:{ path:chartPath, align:chartPath, alignOrigin:[0.5,0.5] }, duration:1.1, ease:'power2.inOut' }, '<')
         .to(chartFrom, { duration:.7, scrambleText:{ text:chartFrom.textContent, chars:'0123456789.' } }, '<')
         .to(chartTo, { duration:.9, scrambleText:{ text:chartTo.textContent, chars:'0123456789.' } }, '<.15');
     }
 
-    /* tools ticker: continuous loop, core GSAP (no plugin needed) */
+    /* tools ticker: continuous loop */
     var ticker = document.getElementById('tickerTrack');
-    if(ticker){
-      gsap.to(ticker, { xPercent:-50, duration:34, ease:'none', repeat:-1 });
-    }
+    if(ticker){ gsap.to(ticker, { xPercent:-50, duration:30, ease:'none', repeat:-1 }); }
 
-    /* magnetic buttons: nudge toward the cursor within their own bounds */
+    /* magnetic buttons */
     document.querySelectorAll('.btn').forEach(function(btn){
       var xTo = gsap.quickTo(btn, 'x', { duration:.4, ease:'power3.out' });
       var yTo = gsap.quickTo(btn, 'y', { duration:.4, ease:'power3.out' });
@@ -1092,13 +1068,40 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       btn.addEventListener('mouseleave', function(){ xTo(0); yTo(0); });
     });
 
-    /* Section reveals and count-ups are triggered by IntersectionObserver
-       rather than ScrollTrigger's edge-crossing callbacks: IO evaluates
-       the CURRENT state as soon as an element is observed, so content
-       that's already on screen at load (e.g. a visitor lands on a direct
-       #track-record link, or restores scroll position) reveals
-       immediately instead of staying stuck at opacity:0 forever because
-       the "entering" edge was never crossed. */
+    /* tilt on service cards */
+    document.querySelectorAll('[data-tilt]').forEach(function(card){
+      var rxTo = gsap.quickTo(card, 'rotationX', { duration:.5, ease:'power3.out' });
+      var ryTo = gsap.quickTo(card, 'rotationY', { duration:.5, ease:'power3.out' });
+      var yTo = gsap.quickTo(card, 'y', { duration:.5, ease:'power3.out' });
+      gsap.set(card, { transformPerspective:700, transformStyle:'preserve-3d' });
+      card.addEventListener('mousemove', function(e){
+        var r = card.getBoundingClientRect();
+        var px = (e.clientX - r.left) / r.width - 0.5;
+        var py = (e.clientY - r.top) / r.height - 0.5;
+        rxTo(py * -8); ryTo(px * 8); yTo(-4);
+      });
+      card.addEventListener('mouseleave', function(){ rxTo(0); ryTo(0); yTo(0); });
+    });
+
+    /* custom cursor: desktop + fine pointer only */
+    if(window.matchMedia('(pointer:fine)').matches){
+      document.documentElement.classList.add('cursor-on');
+      var ring = document.getElementById('cursorRing');
+      var ringX = gsap.quickTo(ring, 'x', { duration:.35, ease:'power3.out' });
+      var ringY = gsap.quickTo(ring, 'y', { duration:.35, ease:'power3.out' });
+      window.addEventListener('mousemove', function(e){ ringX(e.clientX); ringY(e.clientY); });
+      document.querySelectorAll('a, button, [data-tilt]').forEach(function(el){
+        el.addEventListener('mouseenter', function(){ ring.classList.add('hover'); });
+        el.addEventListener('mouseleave', function(){ ring.classList.remove('hover'); });
+      });
+    }
+
+    /* Section reveals and count-ups via IntersectionObserver (not
+       ScrollTrigger's edge-crossing callbacks): IO evaluates the CURRENT
+       state as soon as an element is observed, so content already on
+       screen at load (a direct #section link, restored scroll position)
+       reveals immediately instead of staying stuck at opacity:0 forever
+       because the "entering" edge was never crossed. */
     if('IntersectionObserver' in window){
       var io = new IntersectionObserver(function(entries){
         entries.forEach(function(entry){
@@ -1109,10 +1112,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             animateCount(el);
           } else {
             gsap.to(el, { opacity:1, y:0, duration:.8, ease:'power3.out' });
-            if(hasPlugins){
-              var sparks = el.querySelectorAll('.trend-path');
-              if(sparks.length) gsap.from(sparks, { drawSVG:0, duration:1.1, ease:'power2.out', delay:.15, stagger:.1 });
-            }
           }
         });
       }, { threshold:0.12, rootMargin:'0px 0px -6% 0px' });
@@ -1126,14 +1125,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   });
 
   mm.add('(prefers-reduced-motion: reduce)', function(){
-    gsap.set('.reveal, #hero-card, #hero-stamp', { opacity:1, y:0, scale:1, rotate:0 });
+    gsap.set('.reveal, #hero-card', { opacity:1, y:0, scale:1 });
     document.querySelectorAll('[data-count-to]').forEach(function(el){
       var to = parseFloat(el.getAttribute('data-count-to'));
       var decimals = parseInt(el.getAttribute('data-count-decimals') || '0', 10);
       el.textContent = to.toFixed(decimals) + (el.getAttribute('data-count-suffix') || '');
     });
-    // Chart, sparklines, and ticker already render in their finished static
-    // state by default (see CSS/markup) — nothing to animate, nothing to undo.
   });
 
   /* ================= disclosures (GSAP height accordion) ================= */
@@ -1177,7 +1174,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     });
   });
 
-  /* fallback (no-GSAP) disclosure wiring, kept simple */
   function wireDisclosuresFallback(){
     function simple(selector, eventName, paramKey, dataAttr){
       document.querySelectorAll(selector).forEach(function(trigger){
