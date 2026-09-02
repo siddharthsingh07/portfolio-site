@@ -54,7 +54,9 @@
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth;}
   body{
-    background:var(--ink);
+    background-color:var(--ink);
+    background-image: radial-gradient(circle, rgba(243,241,234,0.055) 1px, transparent 1px);
+    background-size: 26px 26px;
     color:var(--fg);
     font-family:'Inter',-apple-system,sans-serif;
     line-height:1.6;
@@ -305,6 +307,30 @@
   .form-status{ font-size:13.5px; color:var(--muted); min-height:18px; }
   .form-status.ok{ color:var(--verify); }
 
+  /* ---------- hero mini chart ---------- */
+  .mini-chart{ padding-bottom:20px; margin-bottom:20px; border-bottom:1px solid var(--rule-soft); }
+  .mini-chart-head{ display:flex; justify-content:space-between; align-items:center; font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.07em; text-transform:uppercase; color:var(--faint); margin-bottom:12px; }
+  .mini-chart-head .tag{ color:var(--verify); }
+  .chart-svg{ width:100%; height:52px; display:block; overflow:visible; }
+  .chart-grid{ stroke:var(--rule-soft); stroke-width:1; }
+  .chart-line{ fill:none; stroke:var(--verify); stroke-width:2; stroke-linecap:round; }
+  .chart-dot{ fill:var(--verify); }
+  .mini-chart-foot{ display:flex; align-items:baseline; gap:10px; margin-top:12px; }
+  .mini-chart-foot .num{ font-family:'IBM Plex Mono',monospace; font-size:19px; font-weight:600; }
+  .mini-chart-foot .arrow{ color:var(--faint); font-size:14px; }
+  .mini-chart-foot .lbl{ font-size:12px; color:var(--muted); margin-left:2px; }
+
+  /* ---------- ticker ---------- */
+  .ticker-wrap{ overflow:hidden; border-top:1px solid var(--rule); padding:22px 0; }
+  .ticker-track{ display:flex; width:max-content; }
+  .ticker-track span{ font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:0.05em; text-transform:uppercase; color:var(--faint); white-space:nowrap; padding:0 22px; display:inline-flex; align-items:center; gap:22px; }
+  .ticker-track span::after{ content:"·"; color:var(--rule); }
+
+  /* ---------- exhibit trend strip ---------- */
+  .trend-strip{ margin-bottom:16px; }
+  .trend-strip svg{ width:100%; height:34px; display:block; overflow:visible; }
+  .spark-line{ fill:none; stroke-width:2; stroke-linecap:round; }
+
   /* ---------- footer ---------- */
   footer{ border-top:1px solid var(--rule); padding:30px 0; }
   footer .wrap{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
@@ -373,11 +399,26 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="role">Performance Marketing Manager, Bengaluru</div>
           </div>
         </div>
-        <div>
-          <div class="stat-row">
-            <span class="label">Avg. search position, healthcare account</span>
-            <span class="value v-verify">8 → 4.5</span>
+        <div class="mini-chart">
+          <div class="mini-chart-head">
+            <span>Avg. search position, healthcare account</span>
+            <span class="tag">Search Console</span>
           </div>
+          <svg class="chart-svg" viewBox="0 0 280 52" preserveAspectRatio="none" aria-hidden="true">
+            <line x1="0" y1="8" x2="280" y2="8" class="chart-grid"/>
+            <line x1="0" y1="26" x2="280" y2="26" class="chart-grid"/>
+            <line x1="0" y1="44" x2="280" y2="44" class="chart-grid"/>
+            <path id="chartPath" class="chart-line" d="M0,10 C50,16 70,30 110,34 C150,38 180,26 210,20 C235,15 255,10 280,6"/>
+            <circle id="chartDot" class="chart-dot" cx="280" cy="6" r="3.5"/>
+          </svg>
+          <div class="mini-chart-foot">
+            <span class="num" id="chartFrom">8.0</span>
+            <span class="arrow">→</span>
+            <span class="num v-verify" id="chartTo">4.5</span>
+            <span class="lbl">avg. position</span>
+          </div>
+        </div>
+        <div>
           <div class="stat-row">
             <span class="label">Revenue from repeat customers</span>
             <span class="value v-gold">60–80%</span>
@@ -415,6 +456,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </section>
 
+  <!-- TOOLS TICKER -->
+  <div class="ticker-wrap" aria-hidden="true">
+    <div class="ticker-track" id="tickerTrack">
+      <span>Google Ads</span><span>Meta Ads</span><span>LinkedIn Ads</span><span>GA4</span><span>Google Tag Manager</span><span>Search Console</span><span>Looker Studio</span><span>Ahrefs</span><span>SEMrush</span><span>Screaming Frog</span><span>WordPress</span><span>Shopify</span><span>HubSpot</span><span>Claude</span><span>ChatGPT</span><span>Gemini</span><span>Google Ads</span><span>Meta Ads</span><span>LinkedIn Ads</span><span>GA4</span><span>Google Tag Manager</span><span>Search Console</span><span>Looker Studio</span><span>Ahrefs</span><span>SEMrush</span><span>Screaming Frog</span><span>WordPress</span><span>Shopify</span><span>HubSpot</span><span>Claude</span><span>ChatGPT</span><span>Gemini</span>
+    </div>
+  </div>
+
   <!-- WORK / EXHIBITS -->
   <section id="work">
     <div class="wrap">
@@ -445,6 +493,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
           <div>
             <h4>Results, verified</h4>
+            <div class="trend-strip"><svg viewBox="0 0 240 34" preserveAspectRatio="none" aria-hidden="true"><path class="spark-line trend-path" style="stroke:var(--verify)" d="M2,30 C40,29 60,24 90,22 C130,19 160,12 200,8 C215,6 225,5 238,3"/></svg></div>
             <div class="results-table">
               <div class="stat-row"><span class="label">Average position</span><span class="value v-verify">8 → 4.5</span></div>
               <div class="stat-row"><span class="label">Clicks, roughly doubled</span><span class="value v-verify">4.35K → 8.74K</span></div>
@@ -491,6 +540,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
           <div>
             <h4>Results, verified</h4>
+            <div class="trend-strip"><svg viewBox="0 0 240 34" preserveAspectRatio="none" aria-hidden="true"><path class="spark-line trend-path" style="stroke:var(--verify)" d="M2,30 C40,29 60,24 90,22 C130,19 160,12 200,8 C215,6 225,5 238,3"/></svg></div>
             <div class="results-table">
               <div class="stat-row"><span class="label">Average position, roughly halved</span><span class="value v-verify">62.1 → 31.1</span></div>
               <div class="stat-row"><span class="label">Average CTR, nearly 4×</span><span class="value v-verify">0.2% → 0.7%</span></div>
@@ -538,6 +588,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
           <div>
             <h4>Results</h4>
+            <div class="trend-strip"><svg viewBox="0 0 240 34" preserveAspectRatio="none" aria-hidden="true"><path class="spark-line trend-path" style="stroke:var(--gold)" d="M2,30 C40,29 60,24 90,22 C130,19 160,12 200,8 C215,6 225,5 238,3"/></svg></div>
             <div class="results-table">
               <div class="stat-row"><span class="label">CAC, healthcare account</span><span class="value v-gold">~₹3,000</span></div>
               <div class="stat-row"><span class="label">Revenue from repeat customers</span><span class="value v-gold">60–80%</span></div>
@@ -866,7 +917,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/DrawSVGPlugin.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/MotionPathPlugin.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrambleTextPlugin.min.js"></script>
 <script>
 (function(){
 
@@ -932,23 +986,39 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   if(!hasGSAP){
     // GSAP failed to load (offline/CDN blocked) — wire up disclosures with
-    // a plain CSS-class fallback so the site stays fully functional.
+    // a plain CSS-class fallback, and still fill in the numbers that would
+    // otherwise be stuck at their "0" placeholder, so the site stays fully
+    // functional and correct without the library.
     document.documentElement.classList.remove('js-motion');
+    document.querySelectorAll('[data-count-to]').forEach(function(el){
+      var to = parseFloat(el.getAttribute('data-count-to'));
+      var decimals = parseInt(el.getAttribute('data-count-decimals') || '0', 10);
+      el.textContent = to.toFixed(decimals) + (el.getAttribute('data-count-suffix') || '');
+    });
     wireDisclosuresFallback();
     return;
   }
 
   document.documentElement.classList.add('js-motion');
+  if(window.DrawSVGPlugin && window.MotionPathPlugin && window.ScrambleTextPlugin){
+    gsap.registerPlugin(DrawSVGPlugin, MotionPathPlugin, ScrambleTextPlugin);
+  }
+  var hasPlugins = !!(window.DrawSVGPlugin && window.MotionPathPlugin && window.ScrambleTextPlugin);
 
   function animateCount(el){
     var to = parseFloat(el.getAttribute('data-count-to'));
     var decimals = parseInt(el.getAttribute('data-count-decimals') || '0', 10);
     var suffix = el.getAttribute('data-count-suffix') || '';
-    var obj = { v: 0 };
-    gsap.to(obj, {
-      v: to, duration:1.4, ease:'power2.out',
-      onUpdate: function(){ el.textContent = obj.v.toFixed(decimals) + suffix; }
-    });
+    var target = to.toFixed(decimals) + suffix;
+    if(hasPlugins){
+      gsap.to(el, { duration:1.1, scrambleText:{ text:target, chars:'0123456789', speed:0.3, revealDelay:0.15 }, ease:'none' });
+    } else {
+      var obj = { v: 0 };
+      gsap.to(obj, {
+        v: to, duration:1.4, ease:'power2.out',
+        onUpdate: function(){ el.textContent = obj.v.toFixed(decimals) + suffix; }
+      });
+    }
   }
 
   var mm = gsap.matchMedia();
@@ -962,6 +1032,38 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       .from('.hero-cta a', { opacity:0, y:14, duration:.6, stagger:.08 }, '-=.45')
       .from('#hero-card', { opacity:0, y:26, duration:.8 }, '-=.6')
       .from('#hero-stamp', { opacity:0, scale:2.1, rotate:-18, duration:.55, ease:'back.out(2.2)' }, '-=.25');
+
+    if(hasPlugins){
+      var chartPath = document.getElementById('chartPath');
+      var chartDot = document.getElementById('chartDot');
+      var chartFrom = document.getElementById('chartFrom');
+      var chartTo = document.getElementById('chartTo');
+      tl.from(chartPath, { drawSVG:0, duration:1.1, ease:'power2.inOut' }, '-=.5')
+        .to(chartDot, {
+          motionPath:{ path:chartPath, align:chartPath, alignOrigin:[0.5,0.5] },
+          duration:1.1, ease:'power2.inOut'
+        }, '<')
+        .to(chartFrom, { duration:.7, scrambleText:{ text:chartFrom.textContent, chars:'0123456789.' } }, '<')
+        .to(chartTo, { duration:.9, scrambleText:{ text:chartTo.textContent, chars:'0123456789.' } }, '<.15');
+    }
+
+    /* tools ticker: continuous loop, core GSAP (no plugin needed) */
+    var ticker = document.getElementById('tickerTrack');
+    if(ticker){
+      gsap.to(ticker, { xPercent:-50, duration:34, ease:'none', repeat:-1 });
+    }
+
+    /* magnetic buttons: nudge toward the cursor within their own bounds */
+    document.querySelectorAll('.btn').forEach(function(btn){
+      var xTo = gsap.quickTo(btn, 'x', { duration:.4, ease:'power3.out' });
+      var yTo = gsap.quickTo(btn, 'y', { duration:.4, ease:'power3.out' });
+      btn.addEventListener('mousemove', function(e){
+        var r = btn.getBoundingClientRect();
+        xTo((e.clientX - r.left - r.width/2) * 0.3);
+        yTo((e.clientY - r.top - r.height/2) * 0.3);
+      });
+      btn.addEventListener('mouseleave', function(){ xTo(0); yTo(0); });
+    });
 
     /* Section reveals and count-ups are triggered by IntersectionObserver
        rather than ScrollTrigger's edge-crossing callbacks: IO evaluates
@@ -980,6 +1082,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             animateCount(el);
           } else {
             gsap.to(el, { opacity:1, y:0, duration:.8, ease:'power3.out' });
+            if(hasPlugins){
+              var sparks = el.querySelectorAll('.trend-path');
+              if(sparks.length) gsap.from(sparks, { drawSVG:0, duration:1.1, ease:'power2.out', delay:.15, stagger:.1 });
+            }
           }
         });
       }, { threshold:0.12, rootMargin:'0px 0px -6% 0px' });
@@ -999,6 +1105,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       var decimals = parseInt(el.getAttribute('data-count-decimals') || '0', 10);
       el.textContent = to.toFixed(decimals) + (el.getAttribute('data-count-suffix') || '');
     });
+    // Chart, sparklines, and ticker already render in their finished static
+    // state by default (see CSS/markup) — nothing to animate, nothing to undo.
   });
 
   /* ================= disclosures (GSAP height accordion) ================= */
