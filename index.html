@@ -50,6 +50,33 @@
     --gold:#C9A24B;
     --gold-dim:#75612F;
     --maxw:1180px;
+
+    /* paper: for individual cards (the ledger card, a certificate, the
+       résumé), never for whole sections — the canvas stays dark
+       throughout and paper appears as a recurring, contained material
+       on it, not a change of wall colour. */
+    --paper:#F8F5EC;
+    --paper-panel:#EFE9D8;
+    --paper-rule:#DCD3B9;
+    --paper-ink:#19161F;
+    --paper-muted:#615A4D;
+    --paper-faint:#8A8271;
+    --paper-gold:#8A6420;
+  }
+
+  .paper-card{
+    --ink:var(--paper);
+    --panel:var(--paper-panel);
+    --panel-hi:var(--paper-panel);
+    --rule:var(--paper-rule);
+    --rule-soft:var(--paper-rule);
+    --fg:var(--paper-ink);
+    --muted:var(--paper-muted);
+    --faint:var(--paper-faint);
+    --gold:var(--paper-gold);
+    background-color:var(--ink);
+    color:var(--fg);
+    box-shadow:0 22px 44px -26px rgba(0,0,0,0.6);
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth;}
@@ -246,10 +273,10 @@
   .edu-row .main{ font-size:14.5px; }
   .edu-row .dates{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--faint); }
 
-  /* ---------- certifications ---------- */
-  .cert-row{ border-top:1px solid var(--rule); }
-  .cert-row:last-of-type{ border-bottom:1px solid var(--rule); }
-  .cert-trigger{ width:100%; display:flex; justify-content:space-between; align-items:center; gap:20px; padding:22px 0; text-align:left; }
+  /* ---------- certifications: each one its own paper card ---------- */
+  .cert-row{ padding:6px 26px; margin-bottom:14px; }
+  .cert-row:last-child{ margin-bottom:0; }
+  .cert-trigger{ width:100%; display:flex; justify-content:space-between; align-items:center; gap:20px; padding:20px 0; text-align:left; }
   .cert-trigger:disabled{ cursor:default; }
   .cert-trigger:hover:not(:disabled) .cert-title{ color:var(--verify); }
   .cert-title{ font-family:'Fraunces',serif; font-weight:600; font-size:16.5px; transition:color .2s; }
@@ -261,11 +288,11 @@
   .cert-panel-inner{ padding-bottom:28px; max-width:480px; }
   .cert-panel-inner img{ border:1px solid var(--rule); }
 
-  /* ---------- services ---------- */
-  .services-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--rule); border:1px solid var(--rule); }
+  /* ---------- services: individual paper cards on the dark canvas ---------- */
+  .services-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
   @media (max-width:920px){ .services-grid{ grid-template-columns:1fr 1fr; } }
   @media (max-width:560px){ .services-grid{ grid-template-columns:1fr; } }
-  .service-cell{ background:var(--ink); padding:28px 24px; }
+  .service-cell{ padding:28px 24px; }
   .service-cell .idx{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--faint); margin-bottom:16px; }
   .service-cell h4{ font-family:'Fraunces',serif; font-weight:600; font-size:17px; margin-bottom:11px; }
   .service-cell p{ font-size:13.5px; color:var(--muted); line-height:1.6; }
@@ -378,7 +405,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </div>
 
-      <div class="ledger-card" id="hero-card">
+      <div class="ledger-card paper-card" id="hero-card">
         <div class="stamp" id="hero-stamp" aria-hidden="true">
           <svg viewBox="0 0 120 120">
             <circle cx="60" cy="60" r="54" fill="none" stroke="currentColor" stroke-width="1.4"/>
@@ -749,7 +776,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="sec-note">Click a certification to view the original.</div>
       </div>
       <div class="reveal">
-        <div class="cert-row">
+        <div class="cert-row paper-card">
           <button class="cert-trigger" aria-expanded="false" aria-controls="cert-1" data-cert-trigger data-track="view_certificate" data-cert="hubspot">
             <div>
               <div class="cert-title">HubSpot Content Marketing Certified</div>
@@ -764,7 +791,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
         </div>
 
-        <div class="cert-row">
+        <div class="cert-row paper-card">
           <button class="cert-trigger" aria-expanded="false" aria-controls="cert-2" data-cert-trigger data-track="view_certificate" data-cert="google_ads">
             <div>
               <div class="cert-title">Google Ads Search Professional Certification</div>
@@ -779,7 +806,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
         </div>
 
-        <div class="cert-row">
+        <div class="cert-row paper-card">
           <button class="cert-trigger" disabled aria-expanded="false">
             <div>
               <div class="cert-title">Infosys Team Extra Miler Award</div>
@@ -798,27 +825,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <h2>What I can help with</h2>
       </div>
       <div class="services-grid reveal">
-        <div class="service-cell">
+        <div class="service-cell paper-card">
           <div class="idx mono">01</div>
           <h4>Paid Media Management</h4>
           <p>Google Ads, Meta Ads, and LinkedIn Ads — campaign build and optimization, from Performance Max setup to full-funnel remarketing.</p>
         </div>
-        <div class="service-cell">
+        <div class="service-cell paper-card">
           <div class="idx mono">02</div>
           <h4>SEO & AI Search Visibility</h4>
           <p>Technical SEO plus the newer discipline of showing up in AI-generated answers: Google AI Overviews, ChatGPT, Perplexity.</p>
         </div>
-        <div class="service-cell">
+        <div class="service-cell paper-card">
           <div class="idx mono">03</div>
           <h4>Content Strategy & Copywriting</h4>
           <p>Website copy, product pages, and content calendars built to convert the traffic you're already paying for.</p>
         </div>
-        <div class="service-cell">
+        <div class="service-cell paper-card">
           <div class="idx mono">04</div>
           <h4>Analytics & Tracking Setup</h4>
           <p>GA4, Google Tag Manager, and Search Console configured correctly, so every campaign above can actually be measured.</p>
         </div>
-        <div class="service-cell">
+        <div class="service-cell paper-card">
           <div class="idx mono">05</div>
           <h4>AI-Assisted Workflow Design</h4>
           <p>Claude, Gemini, and ChatGPT-based workflows for ad copy testing, reporting, and content briefs, built to be adopted team-wide.</p>
@@ -860,7 +887,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- RESUME CTA -->
   <section style="padding-top:0;">
     <div class="wrap">
-      <div class="resume-band reveal">
+      <div class="resume-band paper-card reveal">
         <div>
           <h3>Want the full picture?</h3>
           <p>7+ years across SEO, paid media, and content — roles, tools, and results in one document.</p>
