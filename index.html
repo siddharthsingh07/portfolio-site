@@ -37,55 +37,19 @@
 
 <style>
   :root{
-    --ink:#0C0D10;
-    --panel:#151619;
-    --panel-hi:#1B1C21;
-    --rule:#2B2C31;
-    --rule-soft:#212226;
+    --ink:#18161C;
+    --panel:#221F27;
+    --panel-hi:#2C2832;
+    --rule:#3A3540;
+    --rule-soft:#2C2732;
     --fg:#F3F1EA;
-    --muted:#93939B;
-    --faint:#5C5D64;
+    --muted:#9F9CA6;
+    --faint:#6E6A76;
     --verify:#C1584A;
     --verify-dim:#7A3830;
     --gold:#C9A24B;
     --gold-dim:#75612F;
     --maxw:1180px;
-
-    /* parchment tones for .section-paper — the physical-document
-       counterpart to the dark "ledger" sections: certificates and the
-       résumé are literally paper, so those two sections are lightened
-       rather than lightening everything uniformly. */
-    --paper:#F3EEE1;
-    --paper-panel:#EAE2CD;
-    --paper-panel-hi:#E2D8BE;
-    --paper-rule:#D8CCAC;
-    --paper-rule-soft:#E2D7BB;
-    --paper-ink:#211D14;
-    --paper-muted:#6B6250;
-    --paper-faint:#948A72;
-    --paper-gold:#8C6A20;
-  }
-
-  /* Re-scopes the shared tokens that every component already reads
-     (var(--ink), var(--panel), var(--fg), ...), so nothing inside a
-     .section-paper section needs its own light-mode overrides. */
-  .section-paper{
-    --ink:var(--paper);
-    --panel:var(--paper-panel);
-    --panel-hi:var(--paper-panel-hi);
-    --rule:var(--paper-rule);
-    --rule-soft:var(--paper-rule-soft);
-    --fg:var(--paper-ink);
-    --muted:var(--paper-muted);
-    --faint:var(--paper-faint);
-    --gold:var(--paper-gold);
-    background-color:var(--ink);
-    background-image: radial-gradient(circle, rgba(33,29,20,0.07) 1px, transparent 1px);
-    background-size:26px 26px;
-    /* color inherits from body as an already-resolved value, not a live
-       var(--fg) lookup, so redefining --fg above doesn't reach text here
-       unless this element also re-declares color itself. */
-    color:var(--fg);
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth;}
@@ -778,7 +742,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </section>
 
   <!-- CERTIFICATIONS -->
-  <section id="certifications" class="section-paper">
+  <section id="certifications">
     <div class="wrap">
       <div class="sec-head reveal">
         <h2>Certifications</h2>
@@ -894,7 +858,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </section>
 
   <!-- RESUME CTA -->
-  <section class="section-paper" style="padding-top:0;">
+  <section style="padding-top:0;">
     <div class="wrap">
       <div class="resume-band reveal">
         <div>
